@@ -19,10 +19,26 @@ def if_missing_time(time, voltage):
         if math.isnan(time[i]) is True:
             time_na.append(i)
     for j in time_na:
-        print(time_na)
         time.pop(j - count)
         voltage.pop(j - count)
         count = count + 1
+    if len(time_na) != 0:
+        logging.error("There is missing data in time list")
+    return time, voltage
+
+
+def if_missing_vol(time, voltage):
+    vol_na = []
+    count = 0
+    for i in range(len(voltage)):
+        if math.isnan(voltage[i]) is True:
+            vol_na.append(i)
+    for j in vol_na:
+        time.pop(j - count)
+        voltage.pop(j - count)
+        count = count + 1
+    if len(vol_na) != 0:
+        logging.error("There is missing data in voltage list")
     return time, voltage
 
 
