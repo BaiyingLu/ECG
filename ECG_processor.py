@@ -5,6 +5,7 @@ import math
 import logging
 import ntpath
 from numpy import nan
+from warnings import warn
 
 
 def path_leaf(path):
@@ -56,6 +57,12 @@ def take_in_data(path):
     if len(time_na) != 0:
         logging.error("There is missing data in time list")
     return time, voltage
+
+
+def extreme_detection(voltage):
+    voltage_extremes = (max(voltage), min(voltage))
+    if voltage_extremes[0] > 300 | voltage_extremes[1] < -300:
+        logging.warning('The voltages exceeded the normal range')
 
 
 def interface():
