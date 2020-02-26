@@ -4,11 +4,23 @@ import matplotlib.pyplot as plt
 import math
 import logging
 import ntpath
+from numpy import nan
 
 
 def path_leaf(path):
     head, tail = ntpath.split(path)
     return tail or ntpath.basename(head)
+
+
+def if_missing_time(time, voltage):
+    time_na = []
+    for i in range(len(time)):
+        if math.isnan(time[i]) is True:
+            time_na.append(i)
+    for i in time_na:
+        time.pop(i)
+        voltage.pop(i)
+    return time, voltage
 
 
 def take_in_data(path):
