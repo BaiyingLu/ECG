@@ -11,6 +11,20 @@ def path_leaf(path):
     return tail or ntpath.basename(head)
 
 
+def take_in_data(path):
+    ECG = pd.read_csv(path)
+    ECG.columns = ["time", "voltage"]
+    ECG.time = pd.to_numeric(ECG.time, errors='coerce')
+    ECG.voltage = pd.to_numeric(ECG.voltage, errors='coerce')
+    time = list(ECG['time'])
+    voltage = list(ECG['voltage'])
+    for i in range(len(time)):
+        time[i] = float(time[i])
+    for i in range(len(voltage)):
+        voltage[i] = float(voltage[i])
+    return time, voltage
+
+
 def interface():
     """Take in the data file name
     This function is an interface which can interact with the user. This
