@@ -14,12 +14,15 @@ def path_leaf(path):
 
 def if_missing_time(time, voltage):
     time_na = []
+    count = 0
     for i in range(len(time)):
         if math.isnan(time[i]) is True:
             time_na.append(i)
-    for i in time_na:
-        time.pop(i)
-        voltage.pop(i)
+    for j in time_na:
+        print(time_na)
+        time.pop(j - count)
+        voltage.pop(j - count)
+        count = count + 1
     return time, voltage
 
 
@@ -34,6 +37,8 @@ def take_in_data(path):
         time[i] = float(time[i])
     for i in range(len(voltage)):
         voltage[i] = float(voltage[i])
+    if len(time_na) != 0:
+        logging.error("There is missing data in time list")
     return time, voltage
 
 

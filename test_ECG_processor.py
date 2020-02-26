@@ -26,6 +26,8 @@ def test_path_leaf(a, expected):
      [2.2, 3.3, 4.4, 5.5], [1.1, 1.2, nan, 1.4]),
     ([nan, 3.3, 4.4, 5.5], [1.1, 1.2, nan, 1.4],
      [3.3, 4.4, 5.5], [1.2, nan, 1.4]),
+    ([nan, 3.3, 4.4, nan], [1.1, 1.2, nan, 1.4],
+     [3.3, 4.4], [1.2, nan]),
 ])
 def test_if_missing_time(a, b, expected1, expected2):
     from ECG_processor import if_missing_time
