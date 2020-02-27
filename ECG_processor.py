@@ -73,6 +73,23 @@ def fourier_transform(time, voltage):
     return f_index, freq_ECG
 
 
+def ideal_filter(f_index, voltage, freq_ECG):
+    hz_minus50 = np.where(f_index >= -45)
+    hz_minus50 = hz_minus50[0][0]
+    hz_50 = np.where(f_index <= 45)
+    hz_50 = hz_50[0][-1]
+    hz_minus05 = np.where(f_index >= -0.7)
+    hz_minus05 = hz_minus05[0][0]
+    hz_05 = np.where(f_index <= 0.7)
+    hz_05 = hz_05[0][-1]
+    ideal_filter = np.zeros(len(voltage))
+    ideal_filter[hz_minus50:hz_minus05] = 1
+    ideal_filter[hz_05:hz_50] = 1
+    after_filter = freq_ECG * ideal_filter
+    recovered_time = np.fft.ifft(np.fft.ifftshift(after_filter))
+    return recovered_time
+
+
 def interface():
     """Take in the data file name
     This function is an interface which can interact with the user. This
