@@ -91,3 +91,18 @@ def test_ideal_filter(a, b, c, expected):
     for i in range(answer.shape[0]):
         new_answer[i] = round(answer[i], 8)
     assert (new_answer == expected).any()
+
+
+@pytest.mark.parametrize("a, expected1, expected2, expected3", [
+    (array([1, 2, 1, 3, 1, 2, 1, 2, 1, 3, 1, 2, 1, 3, 1, 2, 1, 3, 1, 2, 1, 3,
+            1]),
+     array([5, 5]),
+     array([0., 0., 0., 0., 0., 1., 0., 1.]),
+     [2, 2, 2, 2, 2, 3, 2, 3]),
+])
+def test_find_R_wave(a, expected1, expected2, expected3):
+    from ECG_processor import find_R_wave
+    answer1, answer2, answer3 = find_R_wave(a)
+    assert (answer1 == expected1).any()
+    assert (answer2 == expected2).any()
+    assert (answer3 == expected3)

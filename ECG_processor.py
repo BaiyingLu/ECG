@@ -6,6 +6,7 @@ import logging
 import ntpath
 from numpy import nan
 from warnings import warn
+from scipy.signal import find_peaks
 
 
 def path_leaf(path):
@@ -88,6 +89,27 @@ def ideal_filter(f_index, voltage, freq_ECG):
     after_filter = freq_ECG * ideal_filter
     recovered_time = np.fft.ifft(np.fft.ifftshift(after_filter))
     return recovered_time
+
+
+def find_R_wave(recovered_time):
+    peaks, _ = find_peaks(recovered_time)
+    recovered_time = np.array(recovered_time)
+    wrapped_voltage = recovered_time[peaks]
+    wrapped_voltage = list(wrapped_voltage)
+    value = []
+    for i in range(3):
+        value.append(max(wrapped_voltage))
+        wrapped_voltage.remove(max(wrapped_voltage))
+    min_v = min(wrapped_voltage)
+    max_v = max(wrapped_voltage)
+    normalized_voltage = ((wrapped_voltage-min_v)/(max_v-min_v))
+    new_peaks, _ = find_peaks(normalized_voltage, height=0.7)
+    if np.real(normalized_voltage[0]) > 0.7:
+        new_peaks = np.insert(new_peaks, 0, 0)
+    if np.real(normalized_voltage[-1]) > 0.7:
+        last_i = np.where(normalized_voltage == normalized_voltage[-1])[0][0]
+        new_peaks = np.append(new_peaks, last_i)
+    return new_peaks, normalized_voltage, wrapped_voltage
 
 
 def interface():
