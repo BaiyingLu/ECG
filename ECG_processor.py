@@ -65,6 +65,14 @@ def extreme_detection(voltage):
         logging.warning('The voltages exceeded the normal range')
 
 
+def fourier_transform(time, voltage):
+    t0 = time[1] - time[0]
+    f_sample = 1/t0
+    f_index = np.linspace(-f_sample, f_sample, len(voltage))
+    freq_ECG = np.fft.fftshift(np.fft.fft(voltage))
+    return f_index, freq_ECG
+
+
 def interface():
     """Take in the data file name
     This function is an interface which can interact with the user. This
