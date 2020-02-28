@@ -148,6 +148,13 @@ def produce_dict(duration, voltage_extremes, num_beats,
     return patient_dict
 
 
+def output_file(patient_dict, file_name):
+    filename = file_name + '.json'
+    out_file = open(filename, "w")
+    json.dump(patient_dict, out_file)
+    out_file.close()
+
+
 def interface():
     """Take in the data file name
     This function is an interface which can interact with the user. This
@@ -161,6 +168,20 @@ def interface():
     logging.basicConfig(filename=file_name + '.log',
                         level=logging.INFO,
                         filemode='w')
-    data = take_in_data(path)
+    time, voltage = take_in_data(path)
+    voltage_extremes = extreme_detection(voltage)
+    time, voltage = if_missing_time(time, voltage)
+    time, voltage = if_missing_vol(time, voltage)
+    f_index, freq_ECG = fourier_transform(time, voltage)
+    recovered_time = ideal_filter(f_index, voltage, freq_ECG)
+    (new_peaks, normalized_voltage,
+     wrapped_voltage, value) = find_R_wave(recovered_time)
+    (duration, num_beats, mean_hr_bpm,
+     beats_time) = fetch_metrics(new_peaks, normalized_voltage,
+                      wrapped_voltage, value,
+                      time, recovered_time)
+    patient_dict = produce_dict(duration, voltage_extremes, num_beats,
+                      mean_hr_bpm, beats_time)
+    output_file(patient_dict, file_name)
 if __name__ == "__main__":
     interface()
