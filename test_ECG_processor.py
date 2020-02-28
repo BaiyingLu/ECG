@@ -93,16 +93,46 @@ def test_ideal_filter(a, b, c, expected):
     assert (new_answer == expected).any()
 
 
-@pytest.mark.parametrize("a, expected1, expected2, expected3", [
+@pytest.mark.parametrize("a, expected1, expected2, expected3, expected4", [
     (array([1, 2, 1, 3, 1, 2, 1, 2, 1, 3, 1, 2, 1, 3, 1, 2, 1, 3, 1, 2, 1, 3,
             1]),
      array([5, 5]),
      array([0., 0., 0., 0., 0., 1., 0., 1.]),
-     [2, 2, 2, 2, 2, 3, 2, 3]),
+     [2, 2, 2, 2, 2, 3, 2, 3],
+     [3, 3, 3]),
 ])
-def test_find_R_wave(a, expected1, expected2, expected3):
+def test_find_R_wave(a, expected1, expected2, expected3, expected4):
     from ECG_processor import find_R_wave
-    answer1, answer2, answer3 = find_R_wave(a)
+    answer1, answer2, answer3, answer4 = find_R_wave(a)
     assert (answer1 == expected1).any()
     assert (answer2 == expected2).any()
     assert (answer3 == expected3)
+    assert (answer4 == expected4)
+
+
+@pytest.mark.parametrize(("a, b, c, d, e, f, r1, r2, r3, r4"), [
+    (array([5, 5]),
+     array([0., 0., 0., 0., 0., 1., 0., 1.]),
+     [2, 2, 2, 2, 2, 3, 2, 3],
+     [3, 3, 3],
+     np.linspace(0, 10, 23),
+     array([1, 2, 1, 3, 1, 2, 1, 2, 1, 3, 1, 2, 1, 3, 1, 2, 1, 3, 1, 2, 1, 3,
+            1]),
+     10.0, 5, 30,
+     array([1.36363636, 1.36363636, 1.36363636, 1.36363636, 1.36363636,
+            4.09090909, 4.09090909, 4.09090909, 4.09090909, 4.09090909,
+            5.90909091, 5.90909091, 5.90909091, 5.90909091, 5.90909091,
+            7.72727273, 7.72727273, 7.72727273, 7.72727273, 7.72727273,
+            9.54545455, 9.54545455, 9.54545455, 9.54545455, 9.54545455])),
+])
+def test_fetch_metrics(a, b, c, d, e, f, r1, r2, r3, r4):
+    from ECG_processor import fetch_metrics
+    answer1, answer2, answer3, answer4 = fetch_metrics(a, b, c, d, e, f)
+    assert (answer1 == r1)
+    assert (answer2 == r2)
+    assert (answer3 == r3)
+    answer4 = np.array(answer4)
+    new_answer = np.zeros(answer4.shape[0])
+    for i in range(answer4.shape[0]):
+        new_answer[i] = round(answer4[i], 8)
+    assert (new_answer == r4).any()

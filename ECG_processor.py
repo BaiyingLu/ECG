@@ -64,6 +64,7 @@ def extreme_detection(voltage):
     voltage_extremes = (max(voltage), min(voltage))
     if voltage_extremes[0] > 300 | voltage_extremes[1] < -300:
         logging.warning('The voltages exceeded the normal range')
+    return voltage_extremes
 
 
 def fourier_transform(time, voltage):
@@ -109,7 +110,32 @@ def find_R_wave(recovered_time):
     if np.real(normalized_voltage[-1]) > 0.7:
         last_i = np.where(normalized_voltage == normalized_voltage[-1])[0][0]
         new_peaks = np.append(new_peaks, last_i)
-    return new_peaks, normalized_voltage, wrapped_voltage
+    return new_peaks, normalized_voltage, wrapped_voltage, value
+
+
+def fetch_metrics(new_peaks, normalized_voltage,
+                  wrapped_voltage, value,
+                  time, recovered_time):
+    num_beats = normalized_voltage[new_peaks].shape
+    num_beats = num_beats[0] + 3
+    duration = time[-1]
+    mean_hr_bpm = (num_beats/duration) * 60
+    mean_hr_bpm = round(mean_hr_bpm)
+    wrapped_voltage = np.array(wrapped_voltage)
+    original_voltage = wrapped_voltage[new_peaks]
+    original_voltage = list(original_voltage)
+    new_value = original_voltage
+    value = value + new_value
+    beats = []
+    for j in range(0, len(value)):
+        for i in range(0, len(recovered_time)):
+            if recovered_time[i] == value[j]:
+                beats.append(i)
+    beats.sort()
+    beats_time = []
+    for i in beats:
+        beats_time.append(time[i])
+    return duration, num_beats, mean_hr_bpm, beats_time
 
 
 def interface():
