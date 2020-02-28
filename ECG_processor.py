@@ -178,10 +178,10 @@ def interface():
      wrapped_voltage, value) = find_R_wave(recovered_time)
     (duration, num_beats, mean_hr_bpm,
      beats_time) = fetch_metrics(new_peaks, normalized_voltage,
-                      wrapped_voltage, value,
-                      time, recovered_time)
+                                 wrapped_voltage, value,
+                                 time, recovered_time)
     patient_dict = produce_dict(duration, voltage_extremes, num_beats,
-                      mean_hr_bpm, beats_time)
+                                mean_hr_bpm, beats_time)
     output_file(patient_dict, file_name)
 if __name__ == "__main__":
     interface()
