@@ -138,6 +138,16 @@ def fetch_metrics(new_peaks, normalized_voltage,
     return duration, num_beats, mean_hr_bpm, beats_time
 
 
+def produce_dict(duration, voltage_extremes, num_beats,
+                 mean_hr_bpm, beats_time):
+    patient_dict = {"duration": duration,
+                    "voltage_extremes": voltage_extremes,
+                    "num_beats": num_beats,
+                    "mean_hr_bpm": mean_hr_bpm,
+                    "beats": beats_time}
+    return patient_dict
+
+
 def interface():
     """Take in the data file name
     This function is an interface which can interact with the user. This
