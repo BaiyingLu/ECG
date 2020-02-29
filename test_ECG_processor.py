@@ -19,6 +19,18 @@ def test_path_leaf(a, expected):
     assert answer == expected
 
 
+@pytest.mark.parametrize("a, expected", [
+    ([1, 2, 3, 4, 5, 3, 2], (5, 1)),
+    ([2, 8, 3, 9, 4, 7], (9, 2)),
+    ([1, 2, 3], (3, 1)),
+    ([2, 4, 7], (7, 2)),
+])
+def test_extreme_detection(a, expected):
+    from ECG_processor import extreme_detection
+    answer = extreme_detection(a)
+    assert answer == expected
+
+
 @pytest.mark.parametrize("a, b, expected1, expected2", [
     ([1, 2, nan, 4, 5], [0.1, 0.2, 0.3, 0.4, 0.5],
      [1, 2, 4, 5], [0.1, 0.2, 0.4, 0.5]),
