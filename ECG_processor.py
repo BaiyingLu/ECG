@@ -102,6 +102,7 @@ def take_in_data(path):
         array: the voltage array without missing data
     """
     ECG = pd.read_csv(path)
+    logging.info("Start a new ECG trace")
     ECG.columns = ["time", "voltage"]
     ECG.time = pd.to_numeric(ECG.time, errors='coerce')
     ECG.voltage = pd.to_numeric(ECG.voltage, errors='coerce')
@@ -306,6 +307,7 @@ def produce_dict(duration, voltage_extremes, num_beats,
     Returns:
         dictionary: the dictionary with different metrics of an ECG signal
     """
+    logging.info("Assign the ECG trace metrics into dictionary")
     patient_dict = {"duration": duration,
                     "voltage_extremes": voltage_extremes,
                     "num_beats": num_beats,
