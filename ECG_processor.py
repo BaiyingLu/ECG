@@ -256,7 +256,7 @@ def fetch_metrics(new_peaks, normalized_voltage,
     Returns:
         float: time duration of the ECG strip
         int: number of detected beats in the strip, as a numeric variable type
-        int: estimated average heart rate over the length of the strip
+        float: estimated average heart rate over the length of the strip
         list: list of times when a beat occurred
     """
     num_beats = normalized_voltage[new_peaks].shape
